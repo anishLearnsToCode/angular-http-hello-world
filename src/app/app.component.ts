@@ -16,13 +16,14 @@ import {Subscription} from 'rxjs';
 export class AppComponent implements OnDestroy {
   private loadedPosts: Array<Post> = [];
   private readonly postsSubscription: Subscription;
+  private readonly postsSubscriptionNumber: number;
 
   constructor(private readonly postService: PostService) {
-    this.postsSubscription = this.setUpPosts();
+    this.postsSubscriptionNumber = this.postService.managePosts(this.loadedPosts);
   }
 
   ngOnDestroy(): void {
-    this.postsSubscription.unsubscribe();
+    this.postService.endSubscription(this.postsSubscriptionNumber);
   }
 
   private setUpPosts(): Subscription {
