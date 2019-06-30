@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  POSTS_DB_URL: 'https://recipe-app-5e74e.firebaseio.com/post.json',
   production: false
 };
 

@@ -1,6 +1,8 @@
 import {NgModule} from '@angular/core';
 import {PostService} from './services/post.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './interceptors/auth.interceptor';
+import {LoggingInterceptor} from './interceptors/logging.interceptor';
 
 @NgModule({
   declarations: [],
@@ -8,7 +10,17 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    PostService
+    PostService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptor,
+      multi: true
+    }
   ],
   exports: []
 })

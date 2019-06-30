@@ -10,3 +10,12 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+String.prototype.reverse = function(this: string) {
+  let reversedString = '';
+  for (let index = this.length - 1; index >= 0; index--) {
+    reversedString += this.charAt(index);
+  }
+
+  return reversedString;
+};

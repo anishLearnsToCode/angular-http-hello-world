@@ -5,7 +5,7 @@ import {PostFirebase} from './post.firebase';
 export class Post extends PostDto {
   postId: string;
 
-  public static getPostFromPostFirebaseResponse(postDto: PostDto, firebaseResponse: FirebasePostResponseBody): Post {
+  public static fromPostFirebaseResponse(postDto: PostDto, firebaseResponse: FirebasePostResponseBody): Post {
     return {
       postId: firebaseResponse.name,
       ...postDto

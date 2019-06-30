@@ -15,34 +15,45 @@ import {Subscription} from 'rxjs';
 })
 export class AppComponent implements OnDestroy {
   private loadedPosts: Array<Post> = [];
-  private readonly postsSubscription: Subscription;
   private readonly postsSubscriptionNumber: number;
+  private readonly canReadPostsSubscription: Subscription;
+  private readonly canCreatePostsSubscription: Subscription;
+  private readonly isFetchingPostsSubscription: Subscription;
+  private canReadPosts: boolean;
+  private canCreatePosts: boolean;
+  private canDeletePosts = true;
+  private isFetchingPosts: boolean;
 
   constructor(private readonly postService: PostService) {
-    this.postsSubscriptionNumber = this.postService.managePosts(this.loadedPosts);
+    this.postsSubscriptionNumber = this.postService.mapToPosts(this.loadedPosts);
+    this.canReadPostsSubscription = this.postService.canReadPosts.subscribe((canReadPosts: boolean) => {
+      this.canReadPosts = canReadPosts;
+    });
+
+    this.canCreatePostsSubscription = this.postService.canCreatePosts.subscribe((canCreatePosts: boolean) => {
+      this.canCreatePosts = canCreatePosts;
+    });
+
+    this.isFetchingPostsSubscription = this.postService.isFetchingPosts.subscribe((isFetchingPosts) => {
+      this.isFetchingPosts = isFetchingPosts;
+    });
   }
 
   ngOnDestroy(): void {
     this.postService.endSubscription(this.postsSubscriptionNumber);
+    this.canReadPostsSubscription.unsubscribe();
+    this.canCreatePostsSubscription.unsubscribe();
   }
 
-  private setUpPosts(): Subscription {
-    return this.postService.posts
-      .subscribe((posts: Array<Post>) => {
-        this.loadedPosts = posts;
-        console.log(this.loadedPosts);
-      });
+  private fetchPosts(): void {
+    console.log('fetch', this.loadedPosts);
   }
 
   private createNewPost(post: PostDto): void {
     this.postService.createNewPost(post);
   }
 
-  onFetchPosts(): void {
-    console.log('loaded posts', this.loadedPosts);
-  }
-
-  deleteAllPosts(): void {
-    // Send Http request
+  private deleteAllPosts(): void {
+    this.postService.deleteAlPosts();
   }
 }
