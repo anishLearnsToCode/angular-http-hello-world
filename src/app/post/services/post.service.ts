@@ -8,8 +8,8 @@ import {map, tap} from 'rxjs/operators';
 import {mapToObject} from '../../firebase/functions/map-to-object.function';
 import {Post} from '../models/post.model';
 import {environment} from '../../../environments/environment';
-// @ts-ignore
-const HttpStatusCodes = require('http-status-codes');
+import {HttpResponseStatus} from '../../eden/HttpResponseStatus.enum';
+// import {HttpStatus} from 'exceptionally-typed';
 
 
 @Injectable()
@@ -99,7 +99,7 @@ export class PostService implements OnDestroy {
         this.isFetchingPosts$.next(false);
       }, (error: HttpErrorResponse) => {
         console.log(error);
-        if (error.status === HttpStatusCodes.UNAUTHORIZED) {
+        if (error.status === HttpResponseStatus.UNAUTHORIZED) {
           this.canReadPosts$.next(false);
         }
       })
@@ -126,7 +126,7 @@ export class PostService implements OnDestroy {
         this.getAllPosts();
       }, (error: HttpErrorResponse) => {
         console.log(error);
-        if (error.status === HttpStatusCodes.UNAUTHORIZED) {
+        if (error.status === HttpResponseStatus.UNAUTHORIZED) {
           this.canCreatePosts$.next(false);
         }
       });
